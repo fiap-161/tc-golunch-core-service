@@ -1,6 +1,11 @@
 # Kubernetes Deployment - Core Service
 
-Deploy simples do **GoLunch Core Service** com PostgreSQL StatefulSet.
+Deploy simples do **GoLunch Core Service** com PostgreSQL StatefulSet e **Serverless Authentication**.
+
+## 🚀 **INTEGRAÇÃO SERVERLESS**
+- ✅ Configurado para autenticação AWS Lambda
+- ✅ URLs serverless já nos ConfigMaps
+- ✅ **Apenas ajuste as URLs antes do deploy!**
 
 ## 💰 **CUSTO ZERO**
 - ✅ PostgreSQL StatefulSet no cluster
@@ -24,7 +29,24 @@ k8s/
 
 ---
 
-## 🚀 **Deploy Rápido**
+## � **Configuração Serverless (OBRIGATÓRIO)**
+
+**ANTES do deploy**, ajuste as URLs serverless no ConfigMap:
+
+```bash
+# 1. Obtenha as URLs do tc-golunch-serverless
+cd ../tc-golunch-serverless
+terraform output
+
+# 2. Edite o ConfigMap
+vim k8s/core-service-configmap.yaml
+
+# 3. Substitua as URLs template:
+LAMBDA_AUTH_URL: "https://SEU-API-GATEWAY-ID.execute-api.REGION.amazonaws.com/auth"
+SERVICE_AUTH_LAMBDA_URL: "https://SEU-API-GATEWAY-ID.execute-api.REGION.amazonaws.com/service-auth"
+```
+
+## �🚀 **Deploy Rápido**
 
 ```bash
 # Deploy completo (PostgreSQL + Core Service)

@@ -1,17 +1,17 @@
 package middleware
 
 import (
-	"encoding/json"
-	"fmt"
-	"io"
 	"net/http"
 	"strings"
 
+	"github.com/fiap-161/tc-golunch-core-service/internal/shared/httpclient"
 	"github.com/gin-gonic/gin"
 )
 
-// AdminAuthMiddleware verifica se o token pertence a um admin via Operation Service
+// AdminAuthMiddleware validates admin JWT tokens via serverless Lambda
 func AdminAuthMiddleware() gin.HandlerFunc {
+	authClient := httpclient.NewServerlessAuthClient()
+
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
@@ -30,24 +30,29 @@ func AdminAuthMiddleware() gin.HandlerFunc {
 
 		token := tokenParts[1]
 
-		// Validate token with Operation Service
-		if !validateAdminToken(token) {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired admin token"})
+		// Validate admin token with serverless Lambda
+		authResp, err := authClient.ValidateAdminToken(token)
+		if err != nil || !authResp.Valid {
+			errorMsg := "Invalid or expired admin token"
+			if err != nil {
+				errorMsg = err.Error()
+			} else if authResp.Error != "" {
+				errorMsg = authResp.Error
+			}
+			
+			c.JSON(http.StatusUnauthorized, gin.H{"error": errorMsg})
 			c.Abort()
 			return
 		}
 
+		// Set admin information in context
+		c.Set("admin_id", authResp.UserID)
+		c.Set("admin_role", authResp.Role)
+		c.Set("admin_claims", authResp.Claims)
+		
 		c.Next()
 	}
 }
-
-func validateAdminToken(token string) bool {
-	// Call Operation Service to validate admin token
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", "http://localhost:8083/admin/validate", nil)
-	if err != nil {
-		fmt.Printf("Error creating request: %v\n", err)
-		return false
 	}
 
 	req.Header.Set("Authorization", "Bearer "+token)

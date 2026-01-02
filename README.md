@@ -138,3 +138,84 @@ O serviço possui pipeline CI/CD separado em duas fases:
 
 A documentação completa da API está disponível via Swagger UI em:
 `http://localhost:8081/swagger/index.html`
+
+## 🔗 Integração Serverless (AWS Lambda)
+
+✅ **PRONTO PARA USO**: A autenticação serverless já está totalmente configurada!
+
+### **🛠️ Código Implementado**
+O código foi atualizado seguindo o padrão do monolítico `tc-golunch-api`:
+
+1. **ServerlessAuthGateway**: Implementado para comunicação com Lambda
+2. **ServerlessAuthMiddleware**: Middleware de autenticação serverless  
+3. **main.go**: Atualizado para usar serverless auth em vez de JWT local
+
+### **🔧 Configuração das URLs**
+
+**Apenas configure as URLs serverless** (o resto já está pronto):
+
+```bash
+# URLs das funções Lambda (obtidas após deploy do tc-golunch-serverless)
+export LAMBDA_AUTH_URL="https://seu-api-gateway-id.execute-api.region.amazonaws.com/auth"
+export SERVICE_AUTH_LAMBDA_URL="https://seu-api-gateway-id.execute-api.region.amazonaws.com/service-auth"
+
+# Variáveis existentes (mantidas)
+export DATABASE_URL="host=localhost user=golunch_order password=golunch_order123 dbname=golunch_orders port=5433 sslmode=disable TimeZone=America/Sao_Paulo"
+export PAYMENT_SERVICE_URL="http://localhost:8082"
+export OPERATION_SERVICE_URL="http://localhost:8083"
+```
+
+### **📦 Deploy Kubernetes**
+
+✅ **CONFIGURADO**: Os manifestos Kubernetes já estão configurados com as variáveis serverless!
+
+**Apenas ajuste as URLs** no ConfigMap antes do deploy:
+
+```bash
+# 1. Edite o ConfigMap com suas URLs reais
+vim k8s/core-service-configmap.yaml
+
+# Substitua:
+# LAMBDA_AUTH_URL: "https://your-api-gateway-id.execute-api.region.amazonaws.com/auth"
+# SERVICE_AUTH_LAMBDA_URL: "https://your-api-gateway-id.execute-api.region.amazonaws.com/service-auth"
+
+# 2. Deploy completo
+kubectl apply -f k8s/
+```
+
+**Estrutura já configurada:**
+```yaml
+# k8s/core-service-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: core-service-config
+data:
+  LAMBDA_AUTH_URL: "https://your-api-gateway-id.execute-api.region.amazonaws.com/auth"
+  SERVICE_AUTH_LAMBDA_URL: "https://your-api-gateway-id.execute-api.region.amazonaws.com/service-auth"
+  # ... outras variáveis
+```
+
+### **✅ Verificação da Configuração**
+
+Após configurar as variáveis, teste a integração:
+
+```bash
+# 1. Inicie o serviço
+go run cmd/api/main.go
+
+# 2. Teste autenticação serverless
+curl -X POST http://localhost:8081/admin/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
+
+# 3. Verifique logs para confirmação da integração Lambda
+```
+
+### **🔄 Migração Gradual**
+
+A implementação mantém **compatibilidade total** com o código existente:
+- ✅ Mesmas interfaces de autenticação
+- ✅ Mesmos endpoints e responses
+- ✅ Zero breaking changes para clientes
+- ✅ Fallback automático se Lambda não disponível

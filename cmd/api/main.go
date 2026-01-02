@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -36,6 +37,7 @@ import (
 	productorderdatasource "github.com/fiap-161/tc-golunch-core-service/internal/productorder/external/datasource"
 	productordergateway "github.com/fiap-161/tc-golunch-core-service/internal/productorder/gateway"
 	productorderusecases "github.com/fiap-161/tc-golunch-core-service/internal/productorder/usecases"
+	sharedgateway "github.com/fiap-161/tc-golunch-core-service/internal/shared/gateway"
 )
 
 // @title           GoLunch Core Service API
@@ -68,15 +70,20 @@ func main() {
 		log.Fatalf("Erro ao migrar o banco: %v", err)
 	}
 
-	// Customer
+	// Serverless Auth Gateway (following tc-golunch-api monolith pattern)
+	serverlessAuth := sharedgateway.NewServerlessAuthGateway(
+		os.Getenv("LAMBDA_AUTH_URL"),
+		os.Getenv("SERVICE_AUTH_LAMBDA_URL"),
+	)
+
+	// Customer (using serverless auth)
 	customerDatasource := customerdatasource.New(db)
-	authGateway := customergateway.NewAuthGateway("local-secret-key") // Use environment variable in production
-	customerController := customercontroller.Build(customerDatasource, authGateway)
+	customerController := customercontroller.Build(customerDatasource, serverlessAuth)
 	customerHandler := customerhandler.New(customerController)
 
-	// Admin (using same JWT service as customers)
+	// Admin (using same serverless auth as customers - following monolith pattern)
 	adminDatasource := admindatasource.New(db)
-	adminController := admincontroller.Build(adminDatasource, authGateway)
+	adminController := admincontroller.Build(adminDatasource, serverlessAuth)
 	adminHandler := adminhandler.New(adminController)
 
 	// Product
