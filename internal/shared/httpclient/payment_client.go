@@ -44,6 +44,15 @@ func NewPaymentServiceClient() *PaymentServiceClient {
 	}
 }
 
+// addServiceAuth adds service authentication headers to HTTP requests
+func (c *PaymentServiceClient) addServiceAuth(req *http.Request) {
+	// Add service-to-service authentication headers
+	req.Header.Set("X-Service-Name", "core-service")
+	if apiKey := os.Getenv("CORE_SERVICE_API_KEY"); apiKey != "" {
+		req.Header.Set("X-Service-Key", apiKey)
+	}
+}
+
 func (c *PaymentServiceClient) CreatePayment(ctx context.Context, orderID string) (*PaymentResponse, error) {
 	payload := PaymentRequest{OrderID: orderID}
 	jsonData, err := json.Marshal(payload)
@@ -56,6 +65,9 @@ func (c *PaymentServiceClient) CreatePayment(ctx context.Context, orderID string
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
+
+	// Add service authentication
+	c.addServiceAuth(req)
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -80,6 +92,9 @@ func (c *PaymentServiceClient) GetPaymentStatus(ctx context.Context, paymentID s
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
+
+	// Add service authentication
+	c.addServiceAuth(req)
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
