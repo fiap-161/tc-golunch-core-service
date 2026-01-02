@@ -1,4 +1,4 @@
-name: Auth Service - Continuous Integration
+name: Core Service - Continuous Integration
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   tests:
-    name: Auth Service - Testes e Cobertura
+    name: Core Service - Testes e Cobertura
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -1,14 +1,16 @@
-# 🍔 GoLunch Order Service
+# 🍔 GoLunch Core Service
 
-Microsserviço responsável pelo gerenciamento de pedidos da lanchonete. Este serviço implementa a lógica de negócio para criação, consulta e atualização de pedidos, além de gerenciar o catálogo de produtos e clientes.
+Microsserviço central responsável pelas funcionalidades essenciais da lanchonete. Este serviço implementa a lógica de negócio para autenticação, gestão de pedidos, catálogo de produtos e clientes.
 
 ## 🎯 Responsabilidades
 
-- **Gerenciamento de Pedidos**: Criação, consulta e atualização de pedidos
-- **Catálogo de Produtos**: Listagem e consulta de produtos por categoria
-- **Gestão de Clientes**: Identificação e cadastro de clientes
-- **Relacionamento Pedido-Produto**: Associação de produtos aos pedidos
-- **Status de Pedidos**: Controle do fluxo de status dos pedidos
+- **🔐 Autenticação**: Login de clientes e administradores com JWT
+- **📋 Gerenciamento de Pedidos**: Criação, consulta e atualização de pedidos
+- **📦 Catálogo de Produtos**: Listagem e consulta de produtos por categoria  
+- **👥 Gestão de Clientes**: Identificação e cadastro de clientes
+- **🔗 Relacionamento Pedido-Produto**: Associação de produtos aos pedidos
+- **📊 Status de Pedidos**: Controle do fluxo de status dos pedidos
+- **🛡️ Autorização**: Validação de permissões de admin
 
 ## 🏗️ Arquitetura
 
@@ -32,22 +34,26 @@ O serviço segue os princípios da **Arquitetura Hexagonal** com as seguintes ca
 
 ## 🚀 Endpoints Disponíveis
 
-### Clientes
+### 🔐 Autenticação
+- `POST /admin/login` - Login de administrador
+- `POST /admin/register` - Cadastro de administrador
+
+### 👥 Clientes
 - `GET /customer/identify/:cpf` - Identificar cliente por CPF
 - `GET /customer/anonymous` - Login anônimo
 - `POST /customer/register` - Cadastrar novo cliente
 
-### Produtos
+### 📦 Produtos
 - `GET /product/categories` - Listar categorias de produtos
 - `GET /product` - Listar produtos por categoria
 
-### Pedidos
+### 📋 Pedidos
 - `POST /order` - Criar novo pedido
 - `GET /order` - Listar todos os pedidos
 - `PUT /order/:id` - Atualizar pedido
 - `GET /order/panel` - Painel de pedidos
 
-### Health Check
+### 🏥 Health Check
 - `GET /ping` - Health check do serviço
 
 ## 🔧 Configuração Local
@@ -100,10 +106,10 @@ go test -tags=bdd ./...
 
 ```bash
 # Build da imagem
-docker build -t tc-golunch-order-service .
+docker build -t tc-golunch-core-service .
 
 # Executar container
-docker run -p 8081:8081 tc-golunch-order-service
+docker run -p 8081:8081 tc-golunch-core-service
 ```
 
 ## 📈 Monitoramento

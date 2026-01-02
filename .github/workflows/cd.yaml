@@ -1,4 +1,4 @@
-name: Auth Service - Continuous Deployment
+name: Core Service - Continuous Deployment
 
 on:
   push:
@@ -45,9 +45,9 @@ jobs:
       - name: Build da imagem
         run: |
           IMAGE_TAG=${GITHUB_SHA}
-          docker build -t golunch:${IMAGE_TAG} .
-          docker tag golunch:${IMAGE_TAG} $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/golunch:${IMAGE_TAG}
-          docker push $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/golunch:${IMAGE_TAG}
+          docker build -t golunch-core-service:${IMAGE_TAG} .
+          docker tag golunch-core-service:${IMAGE_TAG} $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/golunch-core-service:${IMAGE_TAG}
+          docker push $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/golunch-core-service:${IMAGE_TAG}
 
       - name: Configurar kubectl para o EKS
         run: |
@@ -58,39 +58,29 @@ jobs:
           DB_USER: ${{ secrets.DATABASE_USER }}
           DB_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           DB_HOST: ${{ steps.db_secret.outputs.db_url }}
-          MP_ACCESS_TOKEN: ${{ secrets.MERCADO_PAGO_ACCESS_TOKEN }}
-          MP_SELLER_APP_USER_ID: ${{ secrets.MERCADO_PAGO_SELLER_APP_USER_ID }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: |
-          kubectl delete secret app-secrets --ignore-not-found
-          kubectl create secret generic app-secrets \
-            --from-literal=DATABASE_URL="postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/golunchDB?sslmode=require" \
-            --from-literal=POSTGRES_USER="$DB_USER" \
-            --from-literal=POSTGRES_PASSWORD="$DB_PASSWORD" \
-            --from-literal=POSTGRES_DB="golunchDB" \
-            --from-literal=MERCADO_PAGO_ACCESS_TOKEN="$MP_ACCESS_TOKEN" \
-            --from-literal=MERCADO_PAGO_SELLER_APP_USER_ID="$MP_SELLER_APP_USER_ID" \
-            --from-literal=MERCADO_PAGO_EXTERNAL_POS_ID="DEFAULT" \
-            --from-literal=SECRET_KEY="$SECRET_KEY"
+          kubectl delete secret core-service-secrets --ignore-not-found
+          kubectl create secret generic core-service-secrets \
+            --from-literal=DATABASE_URL="postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/golunch_orders?sslmode=require" \
+            --from-literal=SECRET_KEY="$SECRET_KEY" \
+            --from-literal=PAYMENT_SERVICE_URL="http://payment-service:8082" \
+            --from-literal=PRODUCTION_SERVICE_URL="http://production-service:8083"
 
       - name: Instalar ou atualizar release com Helm
         run: |
           IMAGE_TAG=${GITHUB_SHA}
-          helm upgrade --install golunch-auth-service ./goLunch \
-            --set image.repository=$ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/golunch-auth-service \
+          helm upgrade --install golunch-core-service ./goLunch \
+            --set image.repository=$ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/golunch-core-service \
             --set image.tag=${IMAGE_TAG} \
-            --set app.db_url="${{ steps.db_secret.outputs.db_url }}" \
-            --set app.db_user="${{ secrets.DB_USER }}" \
-            --set app.db_password="${{ secrets.DB_PASSWORD }}" \
-            --set app.mp_access_token="${{ secrets.MERCADO_PAGO_ACCESS_TOKEN }}" \
-            --set app.mp_seller_app_user_id="${{ secrets.MERCADO_PAGO_SELLER_APP_USER_ID }}" \
+            --set app.service_port=8081 \
             --set app.secret_key="${{ secrets.SECRET_KEY }}"
 
       - name: Obter URL do serviço (LoadBalancer)
         run: |
           echo "⏳ Aguardando LoadBalancer atribuir EXTERNAL-IP..."
           for i in {1..30}; do
-            SERVICE_URL=$(kubectl get svc golunch-api -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null)
+            SERVICE_URL=$(kubectl get svc golunch-core-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null)
             if [ -n "$SERVICE_URL" ]; then
               echo "SERVICE_URL=$SERVICE_URL" >> $GITHUB_ENV
               echo "✅ Encontrado: $SERVICE_URL"
@@ -105,12 +95,12 @@ jobs:
       - name: Deploy com Helm (configmap atualizado)
         run: |
           IMAGE_TAG=${GITHUB_SHA}
-          helm upgrade --install golunch-api-0.0.1 ./goLunch \
-            --set image.repository=$ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/golunch \
+          helm upgrade --install golunch-core-service ./goLunch \
+            --set image.repository=$ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/golunch-core-service \
             --set image.tag=${IMAGE_TAG} \
-            --set app.publicURL="http://${SERVICE_URL}:8080" \
-            --set app.webhookURL="http://${SERVICE_URL}:8080/webhook/payment/check"
+            --set app.publicURL="http://${SERVICE_URL}:8081" \
+            --set app.service_port=8081
 
       - name: Atualizando pods
         run: |
-          kubectl rollout restart deployment golunch-api 
+          kubectl rollout restart deployment golunch-core-service 
