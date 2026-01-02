@@ -3,9 +3,9 @@ package entity
 import (
 	"time"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/entity/enum"
-	productentity "github.com/fiap-161/tc-golunch-order-service/internal/product/entity"
-	"github.com/fiap-161/tc-golunch-order-service/internal/shared/entity"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/entity/enum"
+	productentity "github.com/fiap-161/tc-golunch-core-service/internal/product/entity"
+	"github.com/fiap-161/tc-golunch-core-service/internal/shared/entity"
 	"github.com/google/uuid"
 )
 

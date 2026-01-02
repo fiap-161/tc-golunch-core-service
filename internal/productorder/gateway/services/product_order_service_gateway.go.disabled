@@ -3,10 +3,10 @@ package services
 import (
 	"context"
 
-	orderinterfaces "github.com/fiap-161/tc-golunch-order-service/internal/order/interfaces"
-	paymentinterfaces "github.com/fiap-161/tc-golunch-order-service/internal/payment/interfaces"
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/entity"
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/usecases"
+	orderinterfaces "github.com/fiap-161/tc-golunch-core-service/internal/order/interfaces"
+	paymentinterfaces "github.com/fiap-161/tc-golunch-core-service/internal/payment/interfaces"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/entity"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/usecases"
 )
 
 type ProductOrderServiceGateway struct {

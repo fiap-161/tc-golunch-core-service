@@ -4,13 +4,13 @@ import (
 	"context"
 	"mime/multipart"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/product/dto"
-	"github.com/fiap-161/tc-golunch-order-service/internal/product/entity"
-	"github.com/fiap-161/tc-golunch-order-service/internal/product/entity/enum"
-	"github.com/fiap-161/tc-golunch-order-service/internal/product/external/datasource"
-	"github.com/fiap-161/tc-golunch-order-service/internal/product/gateway"
-	"github.com/fiap-161/tc-golunch-order-service/internal/product/presenter"
-	"github.com/fiap-161/tc-golunch-order-service/internal/product/usecases"
+	"github.com/fiap-161/tc-golunch-core-service/internal/product/dto"
+	"github.com/fiap-161/tc-golunch-core-service/internal/product/entity"
+	"github.com/fiap-161/tc-golunch-core-service/internal/product/entity/enum"
+	"github.com/fiap-161/tc-golunch-core-service/internal/product/external/datasource"
+	"github.com/fiap-161/tc-golunch-core-service/internal/product/gateway"
+	"github.com/fiap-161/tc-golunch-core-service/internal/product/presenter"
+	"github.com/fiap-161/tc-golunch-core-service/internal/product/usecases"
 )
 
 // controller (DTOS)

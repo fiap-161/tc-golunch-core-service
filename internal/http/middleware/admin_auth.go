@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// AdminAuthMiddleware verifica se o token pertence a um admin via Production Service
+// AdminAuthMiddleware verifica se o token pertence a um admin via Operation Service
 func AdminAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
@@ -30,7 +30,7 @@ func AdminAuthMiddleware() gin.HandlerFunc {
 
 		token := tokenParts[1]
 
-		// Validate token with Production Service
+		// Validate token with Operation Service
 		if !validateAdminToken(token) {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired admin token"})
 			c.Abort()
@@ -42,7 +42,7 @@ func AdminAuthMiddleware() gin.HandlerFunc {
 }
 
 func validateAdminToken(token string) bool {
-	// Call Production Service to validate admin token
+	// Call Operation Service to validate admin token
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "http://localhost:8083/admin/validate", nil)
 	if err != nil {
@@ -54,7 +54,7 @@ func validateAdminToken(token string) bool {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Printf("Error calling production service: %v\n", err)
+		fmt.Printf("Error calling operation service: %v\n", err)
 		return false
 	}
 	defer resp.Body.Close()

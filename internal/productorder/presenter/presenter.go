@@ -1,8 +1,8 @@
 package presenter
 
 import (
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/dto"
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/entity"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/dto"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/entity"
 )
 
 type Presenter struct {

@@ -27,13 +27,13 @@ graph TB
     Client[Cliente/Admin] --> CoreService[Core Service :8081]
     
     CoreService --> PaymentService[Payment Service :8082]
-    CoreService --> ProductionService[Operation Service :8083]
+    CoreService --> OperationService[Operation Service :8083]
     
     CoreService --> CoreDB[(PostgreSQL :5433)]
     PaymentService --> PaymentDB[(MongoDB :27017)]
-    ProductionService --> ProductionDB[(PostgreSQL :5434)]
+    OperationService --> OperationDB[(PostgreSQL :5434)]
     
-    subgraph "Core Service (tc-golunch-order-service)"
+    subgraph "Core Service (tc-golunch-core-service)"
         CustomerAuth[Customer Authentication]
         AdminAuth[Admin Authentication]
         ProductMgmt[Product Management]
@@ -76,7 +76,7 @@ graph TB
 
 ## 📦 Microserviços
 
-### 🔑 Core Service (tc-golunch-order-service)
+### 🔑 Core Service (tc-golunch-core-service)
 - **Porta**: 8081  
 - **Banco**: PostgreSQL (5433)
 - **Tecnologias**: Go + Gin + GORM
@@ -112,13 +112,13 @@ graph TB
 ```bash
 # Bancos de dados
 docker run -d --name pg-auth -p 5433:5432 -e POSTGRES_DB=postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres postgres:16
-docker run -d --name pg-production -p 5434:5432 -e POSTGRES_DB=golunch_production postgres:15
+docker run -d --name pg-production -p 5434:5432 -e POSTGRES_DB=golunch_operation postgres:15
 docker run -d --name mongo-payments -p 27017:27017 mongo:7
 ```
 
 ### 2. **Core Service** 
 ```bash
-cd tc-golunch-order-service
+cd tc-golunch-core-service
 export DATABASE_URL="host=localhost user=postgres password=postgres dbname=postgres port=5433 sslmode=disable"
 go run cmd/api/main.go
 ```
@@ -147,7 +147,7 @@ GET  /customer/identify/:cpf
 GET  /customer/anonymous  
 POST /customer/register
 
-# Admins (MOVED FROM PRODUCTION SERVICE)
+# Admins (MOVED FROM OPERATION SERVICE)
 POST /admin/register
 POST /admin/login
 GET  /admin/validate
@@ -247,7 +247,7 @@ go test ./... -v
 ## 🗄️ Estratégia de Bancos de Dados
 
 ### **SQL (PostgreSQL)**
-- **Order Service**: Dados estruturados de pedidos, produtos e clientes
+- **Core Service**: Dados estruturados de pedidos, produtos e clientes
 - **Operation Service**: Dados de administradores e sincronização de pedidos
 
 ### **NoSQL (MongoDB)**
@@ -256,8 +256,8 @@ go test ./... -v
 ## 🔄 Comunicação Entre Serviços
 
 ### **Comunicação Síncrona (HTTP)**
-- Order Service → Payment Service: Criação de pagamento
-- Operation Service → Order Service: Consulta de pedidos
+- Core Service → Payment Service: Criação de pagamento
+- Operation Service → Core Service: Consulta de pedidos
 
 ### **Comunicação Assíncrona (Futuro)**
 - Message Queue para notificações de status

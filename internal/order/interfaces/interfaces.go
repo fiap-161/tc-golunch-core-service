@@ -3,8 +3,8 @@ package interfaces
 import (
 	"context"
 
-	productentity "github.com/fiap-161/tc-golunch-order-service/internal/product/entity"
-	productorderentity "github.com/fiap-161/tc-golunch-order-service/internal/productorder/entity"
+	productentity "github.com/fiap-161/tc-golunch-core-service/internal/product/entity"
+	productorderentity "github.com/fiap-161/tc-golunch-core-service/internal/productorder/entity"
 )
 
 type ProductService interface {

@@ -3,10 +3,10 @@ package gateway
 import (
 	"context"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/dto"
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/entity"
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/external/datasource"
-	apperror "github.com/fiap-161/tc-golunch-order-service/internal/shared/errors"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/dto"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/entity"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/external/datasource"
+	apperror "github.com/fiap-161/tc-golunch-core-service/internal/shared/errors"
 )
 
 type Gateway struct {

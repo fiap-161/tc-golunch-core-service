@@ -3,7 +3,7 @@ package datasource
 import (
 	"context"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/customer/dto"
+	"github.com/fiap-161/tc-golunch-core-service/internal/customer/dto"
 	"gorm.io/gorm"
 )
 

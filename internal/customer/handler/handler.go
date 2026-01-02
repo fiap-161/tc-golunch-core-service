@@ -6,10 +6,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/customer/controller"
-	"github.com/fiap-161/tc-golunch-order-service/internal/customer/dto"
-	apperror "github.com/fiap-161/tc-golunch-order-service/internal/shared/errors"
-	"github.com/fiap-161/tc-golunch-order-service/internal/shared/helper"
+	"github.com/fiap-161/tc-golunch-core-service/internal/customer/controller"
+	"github.com/fiap-161/tc-golunch-core-service/internal/customer/dto"
+	apperror "github.com/fiap-161/tc-golunch-core-service/internal/shared/errors"
+	"github.com/fiap-161/tc-golunch-core-service/internal/shared/helper"
 )
 
 type Handler struct {

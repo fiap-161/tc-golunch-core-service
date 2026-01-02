@@ -3,8 +3,8 @@ package dto
 import (
 	"time"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/customer/entity"
-	gormEntity "github.com/fiap-161/tc-golunch-order-service/internal/shared/entity"
+	"github.com/fiap-161/tc-golunch-core-service/internal/customer/entity"
+	gormEntity "github.com/fiap-161/tc-golunch-core-service/internal/shared/entity"
 	"github.com/google/uuid"
 )
 

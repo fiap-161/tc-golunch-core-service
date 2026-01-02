@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/controller"
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/entity/enum"
-	apperror "github.com/fiap-161/tc-golunch-order-service/internal/shared/errors"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/controller"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/entity/enum"
+	apperror "github.com/fiap-161/tc-golunch-core-service/internal/shared/errors"
 	"github.com/gin-gonic/gin"
 )
 

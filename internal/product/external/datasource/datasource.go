@@ -3,7 +3,7 @@ package datasource
 import (
 	"context"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/product/dto"
+	"github.com/fiap-161/tc-golunch-core-service/internal/product/dto"
 )
 
 // TODO: Como é mundo externo, precisa ser uma DTO

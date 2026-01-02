@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/entity"
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/gateway"
-	apperror "github.com/fiap-161/tc-golunch-order-service/internal/shared/errors"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/entity"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/gateway"
+	apperror "github.com/fiap-161/tc-golunch-core-service/internal/shared/errors"
 )
 
 type UseCases struct {

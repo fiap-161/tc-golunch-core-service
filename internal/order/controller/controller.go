@@ -4,12 +4,13 @@ import (
 	"context"
 	"log"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/dto"
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/gateway"
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/gateway/services"
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/interfaces"
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/presenter"
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/usecases"
+	"github.com/fiap-161/tc-golunch-core-service/interna		if err := c.httpGateway.NotifyOperationService(context.Background(), updated.Entity.ID, newStatus); err != nil {
+			log.Printf("Failed to notify operation service for order %s status change: %v", updated.Entity.ID, err)order/dto"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/gateway"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/gateway/services"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/interfaces"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/presenter"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/usecases"
 )
 
 type Controller struct {
@@ -40,10 +41,10 @@ func (c *Controller) Create(ctx context.Context, orderDTO dto.CreateOrderDTO) (d
 		}
 	}()
 
-	// Notify production service about new order
+	// Notify operation service about new order
 	go func() {
-		if err := c.httpGateway.NotifyProductionService(context.Background(), order.Entity.ID, string(order.Status)); err != nil {
-			log.Printf("Failed to notify production service for order %s: %v", order.Entity.ID, err)
+		if err := c.httpGateway.NotifyOperationService(context.Background(), order.Entity.ID, string(order.Status)); err != nil {
+			log.Printf("Failed to notify operation service for order %s: %v", order.Entity.ID, err)
 		}
 	}()
 
@@ -99,8 +100,8 @@ func (c *Controller) Update(ctx context.Context, orderDTO dto.OrderDAO) (dto.Ord
 	newStatus := string(updated.Status)
 	if oldStatus != newStatus {
 		go func() {
-			if err := c.httpGateway.NotifyProductionService(context.Background(), updated.Entity.ID, newStatus); err != nil {
-				log.Printf("Failed to notify production service for order %s status change: %v", updated.Entity.ID, err)
+			if err := c.httpGateway.NotifyOperationService(context.Background(), updated.Entity.ID, newStatus); err != nil {
+				log.Printf("Failed to notify operation service for order %s status change: %v", updated.Entity.ID, err)
 			}
 		}()
 	}

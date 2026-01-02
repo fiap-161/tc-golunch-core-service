@@ -4,10 +4,10 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/admin/controller"
-	"github.com/fiap-161/tc-golunch-order-service/internal/admin/dto"
-	apperror "github.com/fiap-161/tc-golunch-order-service/internal/shared/errors"
-	"github.com/fiap-161/tc-golunch-order-service/internal/shared/helper"
+	"github.com/fiap-161/tc-golunch-core-service/internal/admin/controller"
+	"github.com/fiap-161/tc-golunch-core-service/internal/admin/dto"
+	apperror "github.com/fiap-161/tc-golunch-core-service/internal/shared/errors"
+	"github.com/fiap-161/tc-golunch-core-service/internal/shared/helper"
 	"github.com/gin-gonic/gin"
 )
 

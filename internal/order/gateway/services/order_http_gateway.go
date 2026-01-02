@@ -4,16 +4,17 @@ import (
 	"context"
 	"log"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/entity/enum"
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/usecases"
-	"github.com/fiap-161/tc-golunch-order-service/internal/shared/httpclient"
+	"github.com/fiap-161/tc-golunch-// NotifyOperationService notifies operation service about order changes
+func (g *OrderServiceHTTPGateway) NotifyOperationService(ctx context.Context, orderID, status string) error {re-service/internal/order/entity/enum"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/usecases"
+	"github.com/fiap-161/tc-golunch-core-service/internal/shared/httpclient"
 )
 
 // OrderServiceHTTPGateway provides order operations via HTTP
 type OrderServiceHTTPGateway struct {
-	orderUseCase      *usecases.UseCases
-	paymentClient     *httpclient.PaymentServiceClient
-	productionClient  *httpclient.ProductionServiceClient
+	orderUseCase    *usecases.UseCases
+	paymentClient   *httpclient.PaymentServiceClient
+	operationClient *httpclient.OperationServiceClient
 }
 
 // OrderData represents order data for external services
@@ -24,9 +25,9 @@ type OrderData struct {
 
 func NewOrderServiceHTTPGateway(orderUseCase *usecases.UseCases) *OrderServiceHTTPGateway {
 	return &OrderServiceHTTPGateway{
-		orderUseCase:     orderUseCase,
-		paymentClient:    httpclient.NewPaymentServiceClient(),
-		productionClient: httpclient.NewProductionServiceClient(),
+		orderUseCase:    orderUseCase,
+		paymentClient:   httpclient.NewPaymentServiceClient(),
+		operationClient: httpclient.NewOperationServiceClient(),
 	}
 }
 
@@ -77,13 +78,13 @@ func (g *OrderServiceHTTPGateway) CreatePaymentForOrder(ctx context.Context, ord
 	return nil
 }
 
-// NotifyProductionService notifies production service about order changes
-func (g *OrderServiceHTTPGateway) NotifyProductionService(ctx context.Context, orderID, status string) error {
+// NotifyOperationService notifies operation service about order changes
+func (g *OrderServiceHTTPGateway) NotifyOperationService(ctx context.Context, orderID, status string) error {
 	// Only notify production for specific statuses
 	if status == "paid" || status == "preparing" || status == "ready" {
-		err := g.productionClient.NotifyNewOrder(ctx, orderID, status)
+		err := g.operationClient.NotifyNewOrder(ctx, orderID, status)
 		if err != nil {
-			log.Printf("Failed to notify production service for order %s: %v", orderID, err)
+			log.Printf("Failed to notify operation service for order %s: %v", orderID, err)
 			return err
 		}
 	}
@@ -94,9 +95,9 @@ func (g *OrderServiceHTTPGateway) NotifyProductionService(ctx context.Context, o
 func (g *OrderServiceHTTPGateway) notifyStatusChange(ctx context.Context, orderID, oldStatus, newStatus string) {
 	// Async notifications to avoid blocking the main flow
 	go func() {
-		// Notify production service
-		if err := g.NotifyProductionService(context.Background(), orderID, newStatus); err != nil {
-			log.Printf("Error notifying production service: %v", err)
+		// Notify operation service
+		if err := g.NotifyOperationService(context.Background(), orderID, newStatus); err != nil {
+			log.Printf("Error notifying operation service: %v", err)
 		}
 	}()
 }

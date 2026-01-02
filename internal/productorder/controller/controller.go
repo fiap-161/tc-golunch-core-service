@@ -3,14 +3,14 @@ package controller
 import (
 	"context"
 
-	orderdto "github.com/fiap-161/tc-golunch-order-service/internal/order/dto"
-	productdto "github.com/fiap-161/tc-golunch-order-service/internal/product/dto"
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/dto"
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/entity"
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/external/datasource"
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/gateway"
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/presenter"
-	"github.com/fiap-161/tc-golunch-order-service/internal/productorder/usecases"
+	orderdto "github.com/fiap-161/tc-golunch-core-service/internal/order/dto"
+	productdto "github.com/fiap-161/tc-golunch-core-service/internal/product/dto"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/dto"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/entity"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/external/datasource"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/gateway"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/presenter"
+	"github.com/fiap-161/tc-golunch-core-service/internal/productorder/usecases"
 )
 
 type Controller struct {

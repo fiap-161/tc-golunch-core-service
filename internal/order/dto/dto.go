@@ -4,9 +4,9 @@ import (
 	"errors"
 	"time"
 
-	orderentity "github.com/fiap-161/tc-golunch-order-service/internal/order/entity"
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/entity/enum"
-	"github.com/fiap-161/tc-golunch-order-service/internal/shared/entity"
+	orderentity "github.com/fiap-161/tc-golunch-core-service/internal/order/entity"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/entity/enum"
+	"github.com/fiap-161/tc-golunch-core-service/internal/shared/entity"
 )
 
 type CreateOrderDTO struct {

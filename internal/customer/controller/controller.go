@@ -3,11 +3,11 @@ package controller
 import (
 	"context"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/customer/dto"
-	"github.com/fiap-161/tc-golunch-order-service/internal/customer/external/datasource"
-	"github.com/fiap-161/tc-golunch-order-service/internal/customer/gateway"
-	"github.com/fiap-161/tc-golunch-order-service/internal/customer/usecases"
-	apperror "github.com/fiap-161/tc-golunch-order-service/internal/shared/errors"
+	"github.com/fiap-161/tc-golunch-core-service/internal/customer/dto"
+	"github.com/fiap-161/tc-golunch-core-service/internal/customer/external/datasource"
+	"github.com/fiap-161/tc-golunch-core-service/internal/customer/gateway"
+	"github.com/fiap-161/tc-golunch-core-service/internal/customer/usecases"
+	apperror "github.com/fiap-161/tc-golunch-core-service/internal/shared/errors"
 	"github.com/google/uuid"
 )
 

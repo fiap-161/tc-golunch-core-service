@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/product/controller"
-	"github.com/fiap-161/tc-golunch-order-service/internal/product/dto"
-	apperror "github.com/fiap-161/tc-golunch-order-service/internal/shared/errors"
-	"github.com/fiap-161/tc-golunch-order-service/internal/shared/helper"
+	"github.com/fiap-161/tc-golunch-core-service/internal/product/controller"
+	"github.com/fiap-161/tc-golunch-core-service/internal/product/dto"
+	apperror "github.com/fiap-161/tc-golunch-core-service/internal/shared/errors"
+	"github.com/fiap-161/tc-golunch-core-service/internal/shared/helper"
 	"github.com/gin-gonic/gin"
 )
 

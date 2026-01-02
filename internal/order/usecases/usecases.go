@@ -3,13 +3,13 @@ package usecases
 import (
 	"context"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/dto"
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/entity"
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/gateway"
-	"github.com/fiap-161/tc-golunch-order-service/internal/order/interfaces"
-	productentity "github.com/fiap-161/tc-golunch-order-service/internal/product/entity"
-	productorderentity "github.com/fiap-161/tc-golunch-order-service/internal/productorder/entity"
-	apperror "github.com/fiap-161/tc-golunch-order-service/internal/shared/errors"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/dto"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/entity"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/gateway"
+	"github.com/fiap-161/tc-golunch-core-service/internal/order/interfaces"
+	productentity "github.com/fiap-161/tc-golunch-core-service/internal/product/entity"
+	productorderentity "github.com/fiap-161/tc-golunch-core-service/internal/productorder/entity"
+	apperror "github.com/fiap-161/tc-golunch-core-service/internal/shared/errors"
 )
 
 type UseCases struct {

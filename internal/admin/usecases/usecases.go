@@ -3,10 +3,10 @@ package usecases
 import (
 	"context"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/admin/entity"
-	"github.com/fiap-161/tc-golunch-order-service/internal/admin/gateway"
-	"github.com/fiap-161/tc-golunch-order-service/internal/admin/utils"
-	apperror "github.com/fiap-161/tc-golunch-order-service/internal/shared/errors"
+	"github.com/fiap-161/tc-golunch-core-service/internal/admin/entity"
+	"github.com/fiap-161/tc-golunch-core-service/internal/admin/gateway"
+	"github.com/fiap-161/tc-golunch-core-service/internal/admin/utils"
+	apperror "github.com/fiap-161/tc-golunch-core-service/internal/shared/errors"
 )
 
 type UseCases struct {

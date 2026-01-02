@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	apperror "github.com/fiap-161/tc-golunch-order-service/internal/shared/errors"
+	apperror "github.com/fiap-161/tc-golunch-core-service/internal/shared/errors"
 )
 
 func HandleError(c *gin.Context, err error) {

@@ -3,10 +3,10 @@ package controller
 import (
 	"context"
 
-	"github.com/fiap-161/tc-golunch-order-service/internal/admin/dto"
-	"github.com/fiap-161/tc-golunch-order-service/internal/admin/external/datasource"
-	"github.com/fiap-161/tc-golunch-order-service/internal/admin/gateway"
-	"github.com/fiap-161/tc-golunch-order-service/internal/admin/usecases"
+	"github.com/fiap-161/tc-golunch-core-service/internal/admin/dto"
+	"github.com/fiap-161/tc-golunch-core-service/internal/admin/external/datasource"
+	"github.com/fiap-161/tc-golunch-core-service/internal/admin/gateway"
+	"github.com/fiap-161/tc-golunch-core-service/internal/admin/usecases"
 )
 
 type Controller struct {

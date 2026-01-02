@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "API para gerenciamento de pedidos da lanchonete",
-        "title": "GoLunch Order Service API",
+        "title": "GoLunch Core Service API",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "API Support",

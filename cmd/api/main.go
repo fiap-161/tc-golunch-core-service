@@ -8,37 +8,37 @@ import (
 	swaggerfiles "github.com/swaggo/files"
 	ginswagger "github.com/swaggo/gin-swagger"
 
-	"github.com/fiap-161/tc-golunch-order-service/database"
-	_ "github.com/fiap-161/tc-golunch-order-service/docs"
+	"github.com/fiap-161/tc-golunch-core-service/database"
+	_ "github.com/fiap-161/tc-golunch-core-service/docs"
 
-	// "github.com/fiap-161/tc-golunch-order-service/internal/http/middleware"
-	admincontroller "github.com/fiap-161/tc-golunch-order-service/internal/admin/controller"
-	adminmodel "github.com/fiap-161/tc-golunch-order-service/internal/admin/dto"
-	admindatasource "github.com/fiap-161/tc-golunch-order-service/internal/admin/external/datasource"
-	adminhandler "github.com/fiap-161/tc-golunch-order-service/internal/admin/handler"
-	customercontroller "github.com/fiap-161/tc-golunch-order-service/internal/customer/controller"
-	customermodel "github.com/fiap-161/tc-golunch-order-service/internal/customer/dto"
-	customerdatasource "github.com/fiap-161/tc-golunch-order-service/internal/customer/external/datasource"
-	customergateway "github.com/fiap-161/tc-golunch-order-service/internal/customer/gateway"
-	customerhandler "github.com/fiap-161/tc-golunch-order-service/internal/customer/handler"
-	ordercontroller "github.com/fiap-161/tc-golunch-order-service/internal/order/controller"
-	ordermodel "github.com/fiap-161/tc-golunch-order-service/internal/order/dto"
-	orderdatasource "github.com/fiap-161/tc-golunch-order-service/internal/order/external/datasource"
-	ordergateway "github.com/fiap-161/tc-golunch-order-service/internal/order/gateway"
-	orderhandler "github.com/fiap-161/tc-golunch-order-service/internal/order/handler"
-	productcontroller "github.com/fiap-161/tc-golunch-order-service/internal/product/controller"
-	productmodel "github.com/fiap-161/tc-golunch-order-service/internal/product/dto"
-	productdatasource "github.com/fiap-161/tc-golunch-order-service/internal/product/external/datasource"
-	productgateway "github.com/fiap-161/tc-golunch-order-service/internal/product/gateway"
-	producthandler "github.com/fiap-161/tc-golunch-order-service/internal/product/handler"
-	productusecases "github.com/fiap-161/tc-golunch-order-service/internal/product/usecases"
-	productordermodel "github.com/fiap-161/tc-golunch-order-service/internal/productorder/dto"
-	productorderdatasource "github.com/fiap-161/tc-golunch-order-service/internal/productorder/external/datasource"
-	productordergateway "github.com/fiap-161/tc-golunch-order-service/internal/productorder/gateway"
-	productorderusecases "github.com/fiap-161/tc-golunch-order-service/internal/productorder/usecases"
+	// "github.com/fiap-161/tc-golunch-core-service/internal/http/middleware"
+	admincontroller "github.com/fiap-161/tc-golunch-core-service/internal/admin/controller"
+	adminmodel "github.com/fiap-161/tc-golunch-core-service/internal/admin/dto"
+	admindatasource "github.com/fiap-161/tc-golunch-core-service/internal/admin/external/datasource"
+	adminhandler "github.com/fiap-161/tc-golunch-core-service/internal/admin/handler"
+	customercontroller "github.com/fiap-161/tc-golunch-core-service/internal/customer/controller"
+	customermodel "github.com/fiap-161/tc-golunch-core-service/internal/customer/dto"
+	customerdatasource "github.com/fiap-161/tc-golunch-core-service/internal/customer/external/datasource"
+	customergateway "github.com/fiap-161/tc-golunch-core-service/internal/customer/gateway"
+	customerhandler "github.com/fiap-161/tc-golunch-core-service/internal/customer/handler"
+	ordercontroller "github.com/fiap-161/tc-golunch-core-service/internal/order/controller"
+	ordermodel "github.com/fiap-161/tc-golunch-core-service/internal/order/dto"
+	orderdatasource "github.com/fiap-161/tc-golunch-core-service/internal/order/external/datasource"
+	ordergateway "github.com/fiap-161/tc-golunch-core-service/internal/order/gateway"
+	orderhandler "github.com/fiap-161/tc-golunch-core-service/internal/order/handler"
+	productcontroller "github.com/fiap-161/tc-golunch-core-service/internal/product/controller"
+	productmodel "github.com/fiap-161/tc-golunch-core-service/internal/product/dto"
+	productdatasource "github.com/fiap-161/tc-golunch-core-service/internal/product/external/datasource"
+	productgateway "github.com/fiap-161/tc-golunch-core-service/internal/product/gateway"
+	producthandler "github.com/fiap-161/tc-golunch-core-service/internal/product/handler"
+	productusecases "github.com/fiap-161/tc-golunch-core-service/internal/product/usecases"
+	productordermodel "github.com/fiap-161/tc-golunch-core-service/internal/productorder/dto"
+	productorderdatasource "github.com/fiap-161/tc-golunch-core-service/internal/productorder/external/datasource"
+	productordergateway "github.com/fiap-161/tc-golunch-core-service/internal/productorder/gateway"
+	productorderusecases "github.com/fiap-161/tc-golunch-core-service/internal/productorder/usecases"
 )
 
-// @title           GoLunch Order Service API
+// @title           GoLunch Core Service API
 // @version         1.0
 // @description     API para gerenciamento de pedidos da lanchonete
 // @termsOfService  http://swagger.io/terms/
@@ -115,7 +115,7 @@ func main() {
 	r.POST("/admin/login", adminHandler.Login)
 	// r.GET("/admin/validate", adminHandler.ValidateToken) // TODO: Implement validation
 
-	// Product Routes (read-only for order service)
+	// Product Routes (read-only for core service)
 	r.GET("/product/categories", productHandler.ListCategories)
 	r.GET("/product", productHandler.GetAllByCategory)
 

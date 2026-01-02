@@ -10,23 +10,23 @@ import (
 	"time"
 )
 
-type ProductionServiceClient struct {
+type OperationServiceClient struct {
 	baseURL    string
 	httpClient *http.Client
 }
 
-type ProductionNotificationRequest struct {
+type OperationNotificationRequest struct {
 	OrderID string `json:"order_id"`
 	Status  string `json:"status"`
 }
 
-func NewProductionServiceClient() *ProductionServiceClient {
-	baseURL := os.Getenv("PRODUCTION_SERVICE_URL")
+func NewOperationServiceClient() *OperationServiceClient {
+	baseURL := os.Getenv("OPERATION_SERVICE_URL")
 	if baseURL == "" {
 		baseURL = "http://localhost:8083"
 	}
 
-	return &ProductionServiceClient{
+	return &OperationServiceClient{
 		baseURL: baseURL,
 		httpClient: &http.Client{
 			Timeout: 30 * time.Second,
@@ -34,8 +34,8 @@ func NewProductionServiceClient() *ProductionServiceClient {
 	}
 }
 
-func (c *ProductionServiceClient) NotifyNewOrder(ctx context.Context, orderID, status string) error {
-	payload := ProductionNotificationRequest{
+func (c *OperationServiceClient) NotifyNewOrder(ctx context.Context, orderID, status string) error {
+	payload := OperationNotificationRequest{
 		OrderID: orderID,
 		Status:  status,
 	}
@@ -57,14 +57,14 @@ func (c *ProductionServiceClient) NotifyNewOrder(ctx context.Context, orderID, s
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
-		return fmt.Errorf("production service returned status %d", resp.StatusCode)
+		return fmt.Errorf("operation service returned status %d", resp.StatusCode)
 	}
 
 	return nil
 }
 
-func (c *ProductionServiceClient) UpdateOrderStatus(ctx context.Context, orderID, status string) error {
-	payload := ProductionNotificationRequest{
+func (c *OperationServiceClient) UpdateOrderStatus(ctx context.Context, orderID, status string) error {
+	payload := OperationNotificationRequest{
 		OrderID: orderID,
 		Status:  status,
 	}
@@ -86,7 +86,7 @@ func (c *ProductionServiceClient) UpdateOrderStatus(ctx context.Context, orderID
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("production service returned status %d", resp.StatusCode)
+		return fmt.Errorf("operation service returned status %d", resp.StatusCode)
 	}
 
 	return nil
