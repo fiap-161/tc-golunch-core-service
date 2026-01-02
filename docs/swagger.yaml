@@ -1,0 +1,613 @@
+basePath: /
+definitions:
+  dto.CreateOrderDTO:
+    properties:
+      customer_id:
+        type: string
+      products:
+        items:
+          $ref: '#/definitions/internal_order_dto.OrderProductInfo'
+        type: array
+    type: object
+  dto.CustomerRequestDTO:
+    properties:
+      cpf:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.ImageURLDTO:
+    properties:
+      url:
+        type: string
+    type: object
+  dto.OrderDAO:
+    properties:
+      created_at:
+        type: string
+      customer_id:
+        type: string
+      id:
+        type: string
+      preparing_time:
+        type: integer
+      price:
+        type: number
+      status:
+        $ref: '#/definitions/enum.OrderStatus'
+      updated_at:
+        type: string
+    type: object
+  dto.OrderPanelDTO:
+    properties:
+      orders:
+        items:
+          $ref: '#/definitions/dto.OrderPanelItemDTO'
+        type: array
+    type: object
+  dto.OrderPanelItemDTO:
+    properties:
+      created_at:
+        type: string
+      order_number:
+        type: string
+      preparing_time:
+        type: integer
+      status:
+        type: string
+    type: object
+  dto.OrderResponseListDTO:
+    properties:
+      orders:
+        items:
+          $ref: '#/definitions/dto.OrderDAO'
+        type: array
+    type: object
+  dto.ProductListResponseDTO:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/dto.ProductResponseDTO'
+        type: array
+      total:
+        type: integer
+    type: object
+  dto.ProductRequestDTO:
+    properties:
+      category:
+        $ref: '#/definitions/enum.Category'
+      description:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      preparing_time:
+        type: integer
+      price:
+        type: number
+    required:
+    - category
+    - description
+    - image_url
+    - name
+    - preparing_time
+    - price
+    type: object
+  dto.ProductRequestUpdateDTO:
+    properties:
+      category:
+        $ref: '#/definitions/enum.Category'
+      description:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      preparing_time:
+        type: integer
+      price:
+        type: number
+    type: object
+  dto.ProductResponseDTO:
+    properties:
+      category:
+        $ref: '#/definitions/enum.Category'
+      description:
+        type: string
+      id:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      preparing_time:
+        type: integer
+      price:
+        type: number
+    type: object
+  dto.TokenDTO:
+    properties:
+      token:
+        type: string
+    type: object
+  dto.UpdateOrderDTO:
+    properties:
+      status:
+        type: string
+    required:
+    - status
+    type: object
+  enum.Category:
+    enum:
+    - MEAL
+    - SIDE
+    - DRINK
+    - DESSERT
+    type: string
+    x-enum-varnames:
+    - Meal
+    - Side
+    - Drink
+    - Dessert
+  enum.OrderStatus:
+    enum:
+    - awaiting_payment
+    - received
+    - in_preparation
+    - ready
+    - completed
+    type: string
+    x-enum-varnames:
+    - OrderStatusAwaitingPayment
+    - OrderStatusReceived
+    - OrderStatusInPreparation
+    - OrderStatusReady
+    - OrderStatusCompleted
+  errors.ErrorDTO:
+    properties:
+      message:
+        type: string
+      message_error:
+        type: string
+    type: object
+  internal_order_dto.OrderProductInfo:
+    properties:
+      product_id:
+        type: string
+      quantity:
+        type: integer
+    type: object
+  main.PongResponse:
+    properties:
+      message:
+        type: string
+    type: object
+host: localhost:8081
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: API para gerenciamento de pedidos da lanchonete
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: GoLunch Order Service API
+  version: "1.0"
+paths:
+  /customer/anonymous:
+    get:
+      consumes:
+      - application/json
+      description: Generates a JWT token for an anonymous customer (without CPF)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TokenDTO'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+      summary: Generates anonymous customer
+      tags:
+      - Customer Domain
+  /customer/identify/{cpf}:
+    get:
+      consumes:
+      - application/json
+      description: Returns a JWT token when identifying the customer by CPF
+      parameters:
+      - description: Customer CPF
+        in: path
+        name: cpf
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TokenDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+      summary: Identifies customer by CPF
+      tags:
+      - Customer Domain
+  /customer/register:
+    post:
+      consumes:
+      - application/json
+      description: Creates a customer based on the information sent in the request
+        body
+      parameters:
+      - description: Customer data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CustomerRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+      summary: Creates a new customer
+      tags:
+      - Customer Domain
+  /order/:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of all orders, optionally filtered by ID
+      parameters:
+      - description: Optional order ID filter
+        in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.OrderResponseListDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+      security:
+      - BearerAuth: []
+      summary: Get all orders
+      tags:
+      - Order Domain
+    post:
+      consumes:
+      - application/json
+      description: Create a new order
+      parameters:
+      - description: Order to create. Note that the customer_id is automatically set
+          from the authenticated user.
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateOrderDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+      security:
+      - BearerAuth: []
+      summary: Create Order
+      tags:
+      - Order Domain
+  /order/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update an existing order status
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Order status update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateOrderDTO'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+      security:
+      - BearerAuth: []
+      summary: Update Order
+      tags:
+      - Order Domain
+  /order/panel:
+    get:
+      consumes:
+      - application/json
+      description: Get the order panel with all orders that are in the panel status
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.OrderPanelDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+      security:
+      - BearerAuth: []
+      summary: Get Order Panel
+      tags:
+      - Order Domain
+  /ping:
+    get:
+      consumes:
+      - application/json
+      description: Health Check
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.PongResponse'
+      summary: Answers with "pong"
+      tags:
+      - Ping
+  /product:
+    get:
+      consumes:
+      - application/json
+      description: Returns all products. Optionally, filter by category using query
+        param. Categories must match those returned from [GET] /product/categories.
+      parameters:
+      - description: Category name (e.g., 'drink', 'meal', 'side', 'dessert')
+        in: query
+        name: category
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductListResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+      security:
+      - BearerAuth: []
+      summary: Get all products by category
+      tags:
+      - Product Domain
+  /product/:
+    post:
+      consumes:
+      - application/json
+      description: Create a new product
+      parameters:
+      - description: Product to create. Note category is an integer number. See [GET]
+          /product/categories to get a valid category_id
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ProductRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ProductResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+      security:
+      - BearerAuth: []
+      summary: Create Product
+      tags:
+      - Product Domain
+  /product/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+      security:
+      - BearerAuth: []
+      summary: Delete Product
+      tags:
+      - Product Domain
+    put:
+      consumes:
+      - application/json
+      description: Update an existing product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Product data to update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ProductRequestUpdateDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+      security:
+      - BearerAuth: []
+      summary: Update Product
+      tags:
+      - Product Domain
+  /product/categories:
+    get:
+      consumes:
+      - application/json
+      description: List Categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+      security:
+      - BearerAuth: []
+      summary: List Categories
+      tags:
+      - Product Domain
+  /products/image:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Uploads a JPEG or PNG image (max 5MB) and returns its public URL
+      parameters:
+      - description: Product image (JPEG or PNG, max 5MB)
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ImageURLDTO'
+        "400":
+          description: Image is missing, invalid, or too large
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+        "500":
+          description: Internal error while processing the image
+          schema:
+            $ref: '#/definitions/errors.ErrorDTO'
+      summary: Upload product image
+      tags:
+      - Product Domain
+swagger: "2.0"
