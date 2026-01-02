@@ -7,7 +7,7 @@ metadata:
 data:
   # Microservices URLs
   PAYMENT_SERVICE_URL: "http://payment-service:8082"
-  PRODUCTION_SERVICE_URL: "http://production-service:8083"
+  OPERATION_SERVICE_URL: "http://operation-service:8083"
   
   # Server Configuration
   PORT: "8081"

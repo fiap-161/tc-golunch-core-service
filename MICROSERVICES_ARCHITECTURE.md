@@ -27,7 +27,7 @@ graph TB
     Client[Cliente/Admin] --> CoreService[Core Service :8081]
     
     CoreService --> PaymentService[Payment Service :8082]
-    CoreService --> ProductionService[Production Service :8083]
+    CoreService --> ProductionService[Operation Service :8083]
     
     CoreService --> CoreDB[(PostgreSQL :5433)]
     PaymentService --> PaymentDB[(MongoDB :27017)]
@@ -45,7 +45,7 @@ graph TB
         MercadoPago[MercadoPago Integration]
     end
     
-    subgraph "Production Service"  
+    subgraph "Operation Service"  
         KitchenOps[Kitchen Operations]
         OrderStatus[Order Status Management]
     end
@@ -97,7 +97,7 @@ graph TB
   - ✅ Webhooks de pagamento
   - ✅ QR Code generation
 
-### 🏭 Production Service (tc-golunch-production-service)
+### 🏭 Operation Service (tc-golunch-operation-service)
 - **Porta**: 8083
 - **Banco**: PostgreSQL (5434)
 - **Tecnologias**: Go + Gin + GORM
@@ -131,9 +131,9 @@ export MONGODB_DATABASE="golunch_payments"
 go run cmd/api/main.go
 ```
 
-### 4. **Production Service**
+### 4. **Operation Service**
 ```bash
-cd tc-golunch-production-service
+cd tc-golunch-operation-service
 export DATABASE_URL="host=localhost user=postgres password=postgres dbname=postgres port=5434 sslmode=disable"
 go run cmd/api/main.go
 ```
@@ -171,7 +171,7 @@ POST /webhook/payment/check
 GET  /ping
 ```
 
-### Production Service (8083)  
+### Operation Service (8083)  
 ```http
 GET  /ping
 GET  /auth-info              # Migration info
@@ -185,7 +185,7 @@ GET  /admin/orders/panel     # Protected via Auth Service
 ### Bruno Collections
 - **auth-service/**: ✅ Endpoints centralizados de autenticação
 - **payment-service/**: ✅ Processamento de pagamentos  
-- **production-service/**: ✅ Operações de cozinha + info de migração
+- **operation-service/**: ✅ Operações de cozinha + info de migração
 - **e2e-integration-tests/**: ✅ Testes end-to-end
 
 ### Testes Automatizados
@@ -222,8 +222,8 @@ go test ./... -v
 - `GET /payment/:id` - Consultar pagamento
 - `POST /webhook/payment/check` - Webhook Mercado Pago
 
-### 3. **Production Service** (Porta 8083)
-**Repositório**: `tc-golunch-production-service`
+### 3. **Operation Service** (Porta 8083)
+**Repositório**: `tc-golunch-operation-service`
 
 **Responsabilidades:**
 - Gestão da produção
@@ -248,7 +248,7 @@ go test ./... -v
 
 ### **SQL (PostgreSQL)**
 - **Order Service**: Dados estruturados de pedidos, produtos e clientes
-- **Production Service**: Dados de administradores e sincronização de pedidos
+- **Operation Service**: Dados de administradores e sincronização de pedidos
 
 ### **NoSQL (MongoDB)**
 - **Payment Service**: Dados flexíveis de pagamentos e transações
@@ -257,7 +257,7 @@ go test ./... -v
 
 ### **Comunicação Síncrona (HTTP)**
 - Order Service → Payment Service: Criação de pagamento
-- Production Service → Order Service: Consulta de pedidos
+- Operation Service → Order Service: Consulta de pedidos
 
 ### **Comunicação Assíncrona (Futuro)**
 - Message Queue para notificações de status
