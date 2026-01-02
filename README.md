@@ -61,7 +61,7 @@ O serviço segue os princípios da **Arquitetura Hexagonal** com as seguintes ca
 1. **Clone o repositório**
 2. **Configure as variáveis de ambiente**:
    ```bash
-   export DATABASE_URL="postgres://user:password@localhost:5432/golunch_orders?sslmode=disable"
+   export DATABASE_URL="postgres://user:password@localhost:5432/golunch_core?sslmode=disable"
    export UPLOAD_DIR="./uploads"
    ```
 

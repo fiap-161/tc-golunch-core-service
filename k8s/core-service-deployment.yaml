@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core-service
+  labels:
+    app: core-service
+    version: v1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: core-service
+  template:
+    metadata:
+      labels:
+        app: core-service
+        version: v1
+    spec:
+      containers:
+        - name: core-service
+          image: ${ECR_CORE_SERVICE_URL}:latest
+          ports:
+            - containerPort: 8081
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "0.2"
+              memory: "128Mi"
+            limits:
+              cpu: "0.5"
+              memory: "256Mi"
+          envFrom:
+            - configMapRef:
+                name: core-service-config
+            - secretRef:
+                name: core-service-secrets
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/uploads
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: 8081
+            periodSeconds: 3
+            failureThreshold: 10
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 8081
+            periodSeconds: 5
+            failureThreshold: 3
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8081
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 15
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: core-service-uploads-pvc

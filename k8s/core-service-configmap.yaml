@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: core-service-config
+  labels:
+    app: core-service
+data:
+  # Microservices URLs
+  PAYMENT_SERVICE_URL: "http://payment-service:8082"
+  PRODUCTION_SERVICE_URL: "http://production-service:8083"
+  
+  # Server Configuration
+  PORT: "8081"
+  GIN_MODE: "release"
+  
+  # Database Configuration (StatefulSet)
+  DB_HOST: "postgres-core"
+  DB_PORT: "5432"
+  DB_NAME: "golunch_core"
+  DB_USER: "golunch_core_user"
+  DB_SSL_MODE: "disable"
+  DB_TIMEZONE: "America/Sao_Paulo"
+  
+  # File Upload Configuration (FALTAVA!)
+  UPLOAD_DIR: "./uploads"
+  PUBLIC_URL: "http://core-service:8081"
+  
+  # Webhook Configuration (FALTAVA!)
+  WEBHOOK_URL: "https://webhook.site/123e4567-e89b-12d3-a456-426614174000"
+  
+  # Logging
+  LOG_LEVEL: "info"

@@ -1,9 +1,9 @@
-# Makefile para Order Service
+# Makefile para Core Service
 
 .PHONY: help build run test test-unit test-integration coverage clean
 
 # Variables
-APP_NAME=tc-golunch-order-service
+APP_NAME=tc-golunch-core-service
 BINARY_NAME=main
 GO_FILES=$(shell find . -name "*.go" -not -path "./vendor/*")
 COVERAGE_FILE=coverage.out
@@ -109,8 +109,8 @@ teardown-test-db: ## Teardown test database
 # Integration test with real services
 test-e2e: ## Run end-to-end tests
 	@echo "Running end-to-end tests..."
-	@echo "🔍 Testing Order Service endpoints..."
-	curl -f http://localhost:8081/ping || (echo "❌ Order Service not responding" && exit 1)
+	@echo "🔍 Testing Core Service endpoints..."
+	curl -f http://localhost:8081/ping || (echo "❌ Core Service not responding" && exit 1)
 	curl -f http://localhost:8081/customer/anonymous || (echo "❌ Anonymous endpoint not working" && exit 1)
 	@echo "✅ E2E tests passed!"
 

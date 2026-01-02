@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-core
+  labels:
+    app: postgres-core
+spec:
+  serviceName: postgres-core
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-core
+  template:
+    metadata:
+      labels:
+        app: postgres-core
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:17
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "golunch_core"
+            - name: POSTGRES_USER
+              value: "golunch_core_user"
+            - name: POSTGRES_PASSWORD
+              value: "golunch_core_password"
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - "pg_isready -U golunch_core_user -d golunch_core"
+            initialDelaySeconds: 15
+            periodSeconds: 5
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-core
+  labels:
+    app: postgres-core
+spec:
+  selector:
+    app: postgres-core
+  ports:
+    - name: postgresql
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP
